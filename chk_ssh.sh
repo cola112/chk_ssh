@@ -15,7 +15,7 @@ do
 
     if [ "${RESULT:-null}" = null ]; then
         echo $(date +"%F %T") "PROCESS not running, starting " #$PROCANDARGS
-        $(ssh -X -g -N -D 65000 -L2222:127.0.0.1:22 -L2223:192.168.11.1:22222 -R\*:2222:127.0.0.1:22 cola) &
+        $(ssh -C -X -g -N -D 65000 -L2222:127.0.0.1:22 -L2223:192.168.11.1:22222 -R\*:2222:127.0.0.1:22 cola) &
     else
         echo $(date +"%F %T") "running"
     fi
