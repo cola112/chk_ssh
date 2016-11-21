@@ -12,6 +12,7 @@ fi
 while :
 do
     RESULT=$(ps -ef | grep ssh | grep 65000)
+    PID=$(ps -ef | grep ssh | grep 65000 | awk '{print $2}')
 
     if [ "${RESULT:-null}" = null ]; then
         echo $(date +"%F %T") "PROCESS not running, starting " #$PROCANDARGS
