@@ -9,6 +9,10 @@ if [ "$RUNNING" -gt 3 ]; then
     exit 1
 fi
 
+killprocess(){
+	/bin/kill $PID
+}
+
 while :
 do
     RESULT=$(ps -ef | grep ssh | grep 65000)
