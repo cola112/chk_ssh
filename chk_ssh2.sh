@@ -34,5 +34,6 @@ case $1 in
 killprocess
 ;;
 *)
-echo $USAGE
+echo $"Usage: $0 {start|stop|restart|condrestart|status}"
+exit 1
 esac
