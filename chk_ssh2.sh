@@ -1,13 +1,17 @@
 #!/bin/sh
 
-#PROCESS="$1"
-#PROCANDARGS=$(ssh -X -g -N -D 65000 cola1)
-ME=`basename $0`
-RUNNING=`ps aux | awk '/'"$ME"'/ {++x}; END {print x+0}'`
-if [ "$RUNNING" -gt 3 ]; then
-    echo $(date +"%F %T") "Another instance of \"$ME\" is running $RUNNING"
-    exit 1
+PIDFILE=/tmp/`basename $0`.pid
+
+if [ -f $PIDFILE ]; then
+  if ps -p `cat $PIDFILE` > /dev/null 2>&1; then
+      echo "$0 already running!"
+      exit
+  fi
 fi
+echo $$ > $PIDFILE
+
+trap 'rm -f "$PIDFILE" >/dev/null 2>&1' EXIT HUP KILL INT QUIT TERM
+
 
 killprocess(){
         /bin/kill $PID
@@ -28,12 +32,18 @@ do
 done
 
 case $1 in
--d) check
-;;
--k)
-killprocess
-;;
-*)
-echo $"Usage: $0 {start|stop|restart|condrestart|status}"
-exit 1
+    out)
+        inout
+    ;;
+    test)
+        loop $2
+    ;;
+	-d) check
+	;;
+	-k)
+	killprocess
+	;;
+	*)
+	echo $"Usage: $0 {start|stop|restart|condrestart|status}"
+	exit 1
 esac
