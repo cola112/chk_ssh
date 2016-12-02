@@ -17,6 +17,7 @@ killprocess(){
         /bin/kill $PID
 }
 
+checking(){
 while :
 do
     RESULT=$(ps -ef | grep ssh | grep 65000)
@@ -30,6 +31,7 @@ do
     fi
     sleep 3
 done
+}
 
 case $1 in
     out)
