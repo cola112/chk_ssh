@@ -1,14 +1,5 @@
 #!/bin/sh
 
-#PROCESS="$1"
-#PROCANDARGS=$(ssh -X -g -N -D 65000 cola1)
-#ME=`basename $0`
-#RUNNING=`ps aux | awk '/'"$ME"'/ {++x}; END {print x+0}'`
-#if [ "$RUNNING" -gt 3 ]; then
-#    echo $(date +"%F %T") "Another instance of \"$ME\" is running $RUNNING"
-#    exit 1
-#fi
-
 PIDFILE=/tmp/`basename $0`.pid
 if [ -f $PIDFILE ]; then
 	if ps -p `cat $PIDFILE` > /dev/null 2>&1; then
