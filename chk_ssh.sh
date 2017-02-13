@@ -1,5 +1,6 @@
 #!/bin/sh
 
+#Avoid duplicate script run
 PIDFILE=/tmp/`basename $0`.pid
 if [ -f $PIDFILE ]; then
 	if ps -p `cat $PIDFILE` > /dev/null 2>&1; then
