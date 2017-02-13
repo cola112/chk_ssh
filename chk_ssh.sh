@@ -15,7 +15,8 @@ if [ -f $PIDFILE ]; then
 		echo $(date +"%F %T") "$0 already running!"
 		exit
 	fi
-fiecho $$ > $PIDFILE
+fi
+echo $$ > $PIDFILE
 trap 'rm -f "$PIDFILE" >/dev/null 2>&1' EXIT HUP KILL INT QUIT TERM
 
 killprocess(){
