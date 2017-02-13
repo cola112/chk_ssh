@@ -12,7 +12,7 @@
 PIDFILE=/tmp/`basename $0`.pid
 if [ -f $PIDFILE ]; then
 	if ps -p `cat $PIDFILE` > /dev/null 2>&1; then
-		echo "$0 already running!"
+		echo $(date +"%F %T") "$0 already running!"
 		exit
 	fi
 fiecho $$ > $PIDFILE
