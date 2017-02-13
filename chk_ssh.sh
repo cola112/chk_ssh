@@ -3,16 +3,16 @@
 #Avoid duplicate script run
 PIDFILE=/tmp/`basename $0`.pid
 if [ -f $PIDFILE ]; then
-	if ps -p `cat $PIDFILE` > /dev/null 2>&1; then
-		echo $(date +"%F %T") "$0 already running!"
-		exit
-	fi
+    if ps -p `cat $PIDFILE` > /dev/null 2>&1; then
+        echo $(date +"%F %T") "$0 already running!"
+        exit
+    fi
 fi
 echo $$ > $PIDFILE
 trap 'rm -f "$PIDFILE" >/dev/null 2>&1' EXIT HUP KILL INT QUIT TERM
 
 killprocess(){
-	/bin/kill $PID
+    /bin/kill $PID
 }
 
 while :
