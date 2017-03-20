@@ -1,5 +1,10 @@
 #!/bin/sh
 
+BIND_PORT=65000
+R_LISTPORT=2222
+R_LISTPORT=2223
+SPEC_TUN="-L2223:192.168.11.1:22222"
+
 #Avoid duplicate script run
 PIDFILE=/tmp/`basename $0`.pid
 if [ -f $PIDFILE ]; then
@@ -16,42 +21,38 @@ killprocess(){
 }
 
 cmd_exec() {
-    ssh -X -g -o ExitOnForwardFailure=yes -N -D 65000 \
-        -L2222:127.0.0.1:22 -L2223:192.168.11.1:22222 \
-        -R\*:2222:127.0.0.1:22 cola &
+    ssh -X -g -o ExitOnForwardFailure=yes -N -D $BIND_PORT \
+        -L$L_LISTPORT:127.0.0.1:22 $SPEC_TUN \
+        -R\*:$R_LISTPORT:127.0.0.1:22 cola &
 }
 
 proc_chk() {
-    RESULT=$(ps -ef | grep ssh | grep 65000)
+    RESULT=$(ps -ef | grep ssh | grep $BIND_PORT)
     if [ "${RESULT:-null}" = null ]; then
-        return 0
-    else return 1
+        return 1
+    else return 0
     fi
 }
 
 tun_cmd_chk() {
-    RESULT=$(ssh root@localhost -p2222 netstat -an | egrep '^tcp.*:2221.*LIST')
+    RESULT=$(ssh root@localhost -p$L_LISTPORT netstat -an | egrep '^tcp.*:$R_LISTPORT.*LIST')
     if [ "${RESULT:-null}" = null ]; then
-        return 0
-    else return 1
+        return 1
+    else return 0
     fi
 }
 
 while :
 do
-    RESULT=$(ps -ef | grep ssh | grep 65000)
-    PID=$(ps -ef | grep ssh | grep 65000 | awk '{print $2}')
-
-    if [ "${RESULT:-null}" = null ]; then
-        echo $(date +"%F %T") "PROCESS not running, starting " #$PROCANDARGS
-        ssh -X -g -o ExitOnForwardFailure=yes -N -D 65000 -L2222:127.0.0.1:22 -L2223:192.168.11.1:22222 -R\*:2222:127.0.0.1:22 cola &
-    else
-        echo $(date +"%F %T") "running"
-    fi
+    RESULT=$(ps -ef | grep ssh | grep $BIND_PORT)
+    PID=$(ps -ef | grep ssh | grep $BIND_PORT | awk '{print $2}')
+    proc_chk &&
 
     if proc_chk && tun_cmd_chk; then
-        echo "Tunnel health"
-    else echo " Tunnel not health"
+        echo $(date +"%F %T")" Tunnel health"
+    else echo $(date +"%F %T")" Tunnel not health"
+      if
     fi
+
     sleep 10
 done
