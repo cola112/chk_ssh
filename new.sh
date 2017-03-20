@@ -16,25 +16,25 @@ killprocess(){
 }
 
 cmd_exec() {
-ssh -X -g -o ExitOnForwardFailure=yes -N -D 65000 \
--L2222:127.0.0.1:22 -L2223:192.168.11.1:22222 \
--R\*:2222:127.0.0.1:22 cola &
+    ssh -X -g -o ExitOnForwardFailure=yes -N -D 65000 \
+        -L2222:127.0.0.1:22 -L2223:192.168.11.1:22222 \
+        -R\*:2222:127.0.0.1:22 cola &
 }
 
 proc_chk() {
-RESULT=$(ps -ef | grep ssh | grep 65000)
-if [ "${RESULT:-null}" = null ]; then
-return 0
-else return 1
-fi
+    RESULT=$(ps -ef | grep ssh | grep 65000)
+    if [ "${RESULT:-null}" = null ]; then
+        return 0
+    else return 1
+    fi
 }
 
 tun_cmd_chk() {
-RESULT=$(ssh root@localhost -p2222 netstat -an | egrep '^tcp.*:2221.*LIST')
-if [ "${RESULT:-null}" = null ]; then
-return 0
-else return 1
-fi
+    RESULT=$(ssh root@localhost -p2222 netstat -an | egrep '^tcp.*:2221.*LIST')
+    if [ "${RESULT:-null}" = null ]; then
+        return 0
+    else return 1
+    fi
 }
 
 while :
