@@ -46,12 +46,16 @@ while :
 do
     RESULT=$(ps -ef | grep ssh | grep $BIND_PORT)
     PID=$(ps -ef | grep ssh | grep $BIND_PORT | awk '{print $2}')
-    proc_chk &&
+    proc_chk
+    proc_sta=$?
+    tun_cmd_chk
+    tun_cmd_sta=$?
 
-    if proc_chk && tun_cmd_chk; then
+    if [[ $proc_sta == 0 ]] && [[ $tun_cmd_sta == 0 ]]; then
         echo $(date +"%F %T")" Tunnel health"
     else echo $(date +"%F %T")" Tunnel not health"
-      if
+        if; then 
+        fi
     fi
 
     sleep 10
