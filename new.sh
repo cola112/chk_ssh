@@ -53,8 +53,15 @@ do
 
     if [[ $proc_sta == 0 ]] && [[ $tun_cmd_sta == 0 ]]; then
         echo $(date +"%F %T")" Tunnel health"
-    else echo $(date +"%F %T")" Tunnel not health"
-        if; then 
+    else echo $(date +"%F %T")" Tunnel not health proc_sta=$proc_sta tun_cmd_sta=$tun_cmd_sta"
+        if [[ $proc_sta == 0 ]]; then
+          echo $(date +"%F %T")" Process exist, tun_cmd_sta=$tun_cmd_sta Killing Process"
+          killprocess
+          echo $(date +"%F %T")" Executing SSH tunnel command"
+          cmd_exec
+        else
+          echo $(date +"%F %T")" Executing SSH tunnel command"
+          cmd_exec
         fi
     fi
 
