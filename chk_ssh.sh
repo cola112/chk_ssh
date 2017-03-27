@@ -16,6 +16,8 @@ fi
 echo $$ > $PIDFILE
 trap 'rm -f "$PIDFILE" >/dev/null 2>&1' EXIT HUP KILL INT QUIT TERM
 
+timestamp(){ date +"%F %T" }
+
 killprocess(){
     /bin/kill -9 $PID
 }
@@ -28,7 +30,7 @@ cmd_exec() {
 
 proc_chk() {
     PROC_RESULT=$(ps -ef | grep ssh | grep $BIND_PORT)
-        echo "PROC_RESULT in function="${PROC_RESULT}
+    echo "$(timestamp) PROC_RESULT="${PROC_RESULT}
     if [ "${PROC_RESULT:-null}" = null ]; then
         return 1
     else return 0
@@ -37,7 +39,7 @@ proc_chk() {
 
 tun_cmd_chk() {
     TUN_RESULT=$(ssh root@localhost -p$L_LISTPORT "netstat -an | egrep '^tcp.*:$R_LISTPORT.*LIST'")
-        echo "RESULT in tun function="${TUN_RESULT}
+    echo "$(timestamp) TUN_RESULT="${TUN_RESULT}
     if [ "${TUN_RESULT:-null}" = null ]; then
         return 1
     else return 0
@@ -54,16 +56,16 @@ do
     tun_cmd_sta=$?
 
     if [[ $proc_sta == 0 ]] && [[ $tun_cmd_sta == 0 ]]; then
-        echo $(date +"%F %T")" Tunnel health"
+        echo "$(timestamp)  Tunnel health"
     else
-        echo $(date +"%F %T")" Tunnel not health proc_sta=$proc_sta tun_cmd_sta=$tun_cmd_sta"
+        echo "$(timestamp)  Tunnel not health proc_sta=$proc_sta tun_cmd_sta=$tun_cmd_sta"
         if [[ $proc_sta == 0 ]]; then
-          echo $(date +"%F %T")" Process exist, tun_cmd_sta=$tun_cmd_sta Killing Process"
+          echo "$(timestamp)  Process exist, tun_cmd_sta=$tun_cmd_sta Killing Process"
           killprocess
-          echo $(date +"%F %T")" Executing SSH tunnel command"
+          echo "$(timestamp)  Executing SSH tunnel command"
           cmd_exec
         else
-          echo $(date +"%F %T")" Executing SSH tunnel command"
+          echo "$(timestamp)  Executing SSH tunnel command"
           cmd_exec
         fi
     fi
