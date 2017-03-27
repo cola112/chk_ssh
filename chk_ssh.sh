@@ -16,7 +16,9 @@ fi
 echo $$ > $PIDFILE
 trap 'rm -f "$PIDFILE" >/dev/null 2>&1' EXIT HUP KILL INT QUIT TERM
 
-timestamp(){ date +"%F %T" }
+timestamp(){
+    date +"%F %T"
+}
 
 killprocess(){
     /bin/kill -9 $PID
