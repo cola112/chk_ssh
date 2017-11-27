@@ -31,7 +31,7 @@ cmd_exec() {
 }
 
 proc_chk() {
-    PROC_RESULT=$(ps -ef | grep ssh | grep $BIND_PORT)
+    PROC_RESULT="$(ps -ef | grep ssh | grep $BIND_PORT 2>&1)"
     echo "$(timestamp) PROC_RESULT="${PROC_RESULT}
     if [ "${PROC_RESULT:-null}" = null ]; then
         return 1
@@ -40,7 +40,7 @@ proc_chk() {
 }
 
 tun_cmd_chk() {
-    TUN_RESULT=$(ssh root@localhost -p$L_LISTPORT "netstat -an | egrep '^tcp.*:$R_LISTPORT.*LIST'")
+    TUN_RESULT="$(ssh root@localhost -p$L_LISTPORT "netstat -an | egrep '^tcp.*:$R_LISTPORT.*LIST'" 2>&1)"
     echo "$(timestamp) TUN_RESULT="${TUN_RESULT}
     if [ "${TUN_RESULT:-null}" = null ]; then
         return 1
